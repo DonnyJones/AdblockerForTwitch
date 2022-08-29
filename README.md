@@ -13,6 +13,8 @@ You can donate via Paypal at https://www.paypal.com/paypalme/ttvadblock
 
 The code is licensed under the GPL-3.0 license and is based on https://github.com/cleanlock/VideoAdBlockForTwitch by cleanlock.
 
+FireFox : https://addons.mozilla.org/firefox/addon/adblocker-for-twitch/
+
 Latest Changes:
 
 - Made changes to playertypes and fallbacks, to get the code working again.
