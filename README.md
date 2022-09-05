@@ -15,6 +15,8 @@ The code is licensed under the GPL-3.0 license and is based on https://github.co
 
 FireFox : https://addons.mozilla.org/firefox/addon/adblocker-for-twitch/
 
+Chrome : https://chrome.google.com/webstore/detail/adblocker-for-twitch/bfeoploanlacfeohdakiecicjnjcooji
+
 Latest Changes:
 
 - Made changes to playertypes and fallbacks, to get the code working again.
