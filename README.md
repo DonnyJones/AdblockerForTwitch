@@ -17,6 +17,8 @@ FireFox : https://addons.mozilla.org/firefox/addon/adblocker-for-twitch/
 
 Chrome : https://chrome.google.com/webstore/detail/adblocker-for-twitch/bfeoploanlacfeohdakiecicjnjcooji
 
+Edge : https://microsoftedge.microsoft.com/addons/detail/dahmifdfembhgdohgbhnjhnjnchepipd
+
 Latest Changes:
 
 - Made changes to playertypes and fallbacks, to get the code working again.
