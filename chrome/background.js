@@ -4,8 +4,8 @@ function handleInstalled(details) {
     let createData = {
       focused: true,
       type: "popup",
-      url: "popup/install.html",
-      width: 365,
+      url: "dropdown/install.html",
+      width: 366,
       height: 750,
     };
 

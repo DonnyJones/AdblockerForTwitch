@@ -1,26 +1,25 @@
-    //This stops Twitch from pausing the player when in another tab and an ad shows.
     try {
-        Object.defineProperty(document, 'visibilityState', {
-            get() {
-                return 'visible';
-            }
-        });
         Object.defineProperty(document, 'hidden', {
             get() {
                 return false;
             }
         });
-        const block = e => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-        };
+        Object.defineProperty(document, 'visibilityState', {
+            get() {
+                return 'visible';
+            }
+        });
         const process = e => {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
             //This corrects the background tab buffer bug when switching to the background tab for the first time after an extended period.
             doTwitchPlayerTask(false, false, true, false, false);
+        };
+        const block = e => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
         };
         document.addEventListener('visibilitychange', process, true);
         document.addEventListener('webkitvisibilitychange', block, true);
@@ -41,7 +40,6 @@
         }
     } catch (err) {}
 
-    //Send settings updates to worker.
     window.addEventListener("message", (event) => {
         if (event.source != window)
             return;
@@ -150,7 +148,6 @@
                 } else if (e.data.key == 'PauseResumePlayer') {
                     doTwitchPlayerTask(true, false, false, false, false);
                 } else if (e.data.key == 'ForceChangeQuality') {
-                    //This is used to fix the bug where the video would freeze.
                     try {
                         var autoQuality = doTwitchPlayerTask(false, false, false, true, false);
                         var currentQuality = doTwitchPlayerTask(false, true, false, false, false);
@@ -243,7 +240,6 @@
             };
 
             function getAdBlockDiv() {
-                //To display a notification to the user, that an ad is being blocked.
                 var playerRootDiv = document.querySelector('.video-player');
                 var adBlockDiv = null;
                 if (playerRootDiv != null) {
@@ -276,7 +272,6 @@
                 if (url.includes('video-weaver')) {
                     return new Promise(function(resolve, reject) {
                         var processAfter = async function(response) {
-                            //Here we check the m3u8 for any ads and also try fallback player types if needed.
 
                             var responseText = await response.text();
                             var weaverText = null;
@@ -375,9 +370,7 @@
     }
 
     async function processM3U8(url, textStr, realFetch, playerType, isBackup) {
-        //Checks the m3u8 for ads and if it finds one, instead returns an ad-free stream.
 
-        //Ad blocking for squad streams is disabled due to the way multiple weaver urls are used. No workaround so far.
         if (IsSquadStream == true) {
             return textStr;
         }
@@ -386,7 +379,6 @@
             return textStr;
         }
 
-        //Some live streams use mp4.
         if (!textStr.includes(".ts") && !textStr.includes(".mp4")) {
             return textStr;
         }
@@ -447,7 +439,6 @@
                                 });
                             }
 
-                            //Backup for when thunderdome/embed breaks.
                             if (m3u8Text.includes(AdSignifier) && isBackup) {
 
                                 var urlInfoFree = new URL('https://ushers.ttvworker.workers.dev/https://usher.ttvnw.net/api/channel/hls/' + CurrentChannelName);
@@ -570,9 +561,6 @@
     }
 
     function doTwitchPlayerTask(isPausePlay, isCheckQuality, isCorrectBuffer, isAutoQuality, setAutoQuality) {
-        //This will do an instant pause/play to return to original quality once the ad is finished.
-        //We also use this function to get the current video player quality set by the user.
-        //We also use this function to quickly pause/play the player when switching tabs to stop delays.
         try {
             var videoController = null;
             var videoPlayer = null;
@@ -631,8 +619,6 @@
                 videoPlayer.setAutoQualityMode(true);
                 return;
             }
-            //This only happens when switching tabs and is to correct the high latency caused when opening background tabs and going to them at a later time.
-            //We check that this is a live stream by the page URL, to prevent vod/clip pause/plays.
             try {
                 var currentPageURL = document.URL;
                 var isLive = true;
@@ -640,7 +626,6 @@
                     isLive = false;
                 }
                 if (isCorrectBuffer && isLive) {
-                    //A timer is needed due to the player not resuming without it.
                     setTimeout(function() {
                         //If latency to broadcaster is above 5 or 15 seconds upon switching tabs, we pause and play the player to reset the latency.
                         //If latency is between 0-6, user can manually pause and resume to reset latency further.
@@ -664,7 +649,6 @@
         var realFetch = window.fetch;
         window.fetch = function(url, init, ...args) {
             if (typeof url === 'string') {
-                //Check if squad stream.
                 if (window.location.pathname.includes('/squad')) {
                     if (twitchMainWorker) {
                         twitchMainWorker.postMessage({
@@ -681,12 +665,10 @@
                     }
                 }
                 if (url.includes('/access_token') || url.includes('gql')) {
-                    //Device ID is used when notifying Twitch of ads.
                     var deviceId = init.headers['X-Device-Id'];
                     if (typeof deviceId !== 'string') {
                         deviceId = init.headers['Device-ID'];
                     }
-                    //Added to prevent eventual UBlock conflicts.
                     if (typeof deviceId === 'string' && !deviceId.includes('twitch-web-wall-mason')) {
                         GQLDeviceID = deviceId;
                     } else if (localDeviceID) {
@@ -705,7 +687,6 @@
                             value: GQLDeviceID
                         });
                     }
-                    //Client version is used in GQL requests.
                     var clientVersion = init.headers['Client-Version'];
                     if (clientVersion && typeof clientVersion == 'string') {
                         ClientVersion = clientVersion;
@@ -716,7 +697,6 @@
                             value: ClientVersion
                         });
                     }
-                    //Client session is used in GQL requests.
                     var clientSession = init.headers['Client-Session-Id'];
                     if (clientSession && typeof clientSession == 'string') {
                         ClientSession = clientSession;
@@ -727,7 +707,6 @@
                             value: ClientSession
                         });
                     }
-                    //Client ID is used in GQL requests.
                     if (url.includes('gql') && init && typeof init.body === 'string' && init.body.includes('PlaybackAccessToken')) {
                         var clientId = init.headers['Client-ID'];
                         if (clientId && typeof clientId == 'string') {
@@ -745,7 +724,6 @@
                             });
                         }
                     }
-                    //To prevent pause/resume loop for mid-rolls.
                     if (url.includes('gql') && init && typeof init.body === 'string' && init.body.includes('PlaybackAccessToken') && init.body.includes('picture-by-picture')) {
                         init.body = '';
                     }

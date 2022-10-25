@@ -1,10 +1,7 @@
-<!-- This HTML will be shown when clicked on Extension Icon-->
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
-        <title>Better Twitch Adblock</title>
-        <style>
+       <style>
             html,
             body {
                 width: 340px;
@@ -36,8 +33,8 @@
                 float: right;
                 position: relative;
                 display: inline-block;
-                width: 40px;
-                height: 20px;
+                width: 41px;
+                height: 21px;
             }
             .switch input {
                 opacity: 0;
@@ -51,15 +48,15 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: #ff5c5c;
+                background-color: #fffff;
                 -webkit-transition: 0.4s;
                 transition: 0.4s;
             }
             .slider:before {
                 position: absolute;
                 content: "";
-                height: 14px;
-                width: 14px;
+                height: 15px;
+                width: 15px;
                 left: 5px;
                 bottom: 3px;
                 background-color: #fff;
@@ -87,7 +84,7 @@
         </style>
     </head>
     <body>
-        <div id="popup-content">
+        <div id="dropdown-content">
             <p class="p2">
                 Adblocking
                 <label class="switch">
@@ -102,10 +99,10 @@
                     <span class="slider round"></span>
                 </label>
             </p>
-            <p class="p2">Whenever you change a setting, you have to reload the Twitch tab(s).</p>
+            <p class="p2">When changing a setting, please refresh any Twitch tabs.</p>
             <p class="p2">Please consider donating a small amount to keep the extension running. Thank you!</p>
             <center><a href="https://www.paypal.com/paypalme/ttvadblock" target="_blank"><img src="Donate-Paypal-Button.png" height="80%" width="80%" alt="Adblock For Twitch"></a></center>
         </div>
-        <script src="popupjs.js"></script>
+        <script src="dropdownJS.js"></script>
     </body>
 </html>

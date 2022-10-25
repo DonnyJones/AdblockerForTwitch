@@ -1,15 +1,15 @@
 {
   "description": "Blocks Video Ads on Twitch.tv.",
   "manifest_version": 2,
-  "name": "Adblocker For Twitch",
-  "version": "1.0.0",
+  "name": "Better Twitch Adblock",
+  "version": "1.0.5",
   "icons": {
     "48": "icons/adblock-48x48.png",
     "96": "icons/adblock-96x96.png"
   },
   "browser_action": {
     "default_icon": "icons/adblock-32x32.png",
-    "default_title": "Adblocker For Twitch",
+    "default_title": "Better Twitch Adblock",
     "default_popup": "popup/index.html"
   },
   "options_ui": {
