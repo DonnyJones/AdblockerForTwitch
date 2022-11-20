@@ -478,7 +478,7 @@ function removeVideoAds() {
                             //Backup for when thunderdome/embed breaks.
                             if (m3u8Text.includes(AdSignifier) && isBackup) {
 
-                                var urlInfoFree = new URL('https://ushers.ttvworker.workers.dev/https://usher.ttvnw.net/api/channel/hls/' + CurrentChannelName);
+                                var urlInfoFree = new URL('https://api.ttv.lol/playlist/' + CurrentChannelName + '.m3u8%3Fallow_source%3Dtrue');
                                 var encodingsM3u8ResponseFree = await realFetch(urlInfoFree.href);
                                 if (encodingsM3u8ResponseFree.status === 200) {
                                     var encodingsM3u8Free = await encodingsM3u8ResponseFree.text();
