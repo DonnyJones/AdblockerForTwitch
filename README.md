@@ -3,7 +3,7 @@
 
 How does it work?
 
-The extension works by finding an ad-free Twitch stream source and replacing the ad with the ad-free version. The ad-free version will be limited to 480p. Once the ad is finished, the Twitch stream will automatically revert to the original video quality.
+The extension works by finding an ad-free Twitch stream source.
 
 Twitch Ads will be blocked for pre-rolls and mid-rolls and also on VOD's. We also block third party trackers.
 
