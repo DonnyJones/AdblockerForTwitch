@@ -173,7 +173,7 @@ function removeVideoAds() {
                     if (adBlockDiv == null) {
                         adBlockDiv = getAdBlockDiv();
                     }
-                    adBlockDiv.P.textContent = 'Help support me...';
+                    adBlockDiv.P.textContent = 'Blocking ads..Help support me..';
                     adBlockDiv.style.display = 'block';
                 } else if (e.data.key == 'PauseResumePlayer') {
                     doTwitchPlayerTask(true, false, false, false, false);
@@ -250,6 +250,8 @@ function removeVideoAds() {
                                             var currentQualityLS = window.localStorage.getItem('video-quality');
 
                                             lowQuality[qualityToSelect].click();
+                                            settingsCog.click();
+
                                             window.localStorage.setItem('video-quality', currentQualityLS);
 
                                             if (e.data.value != null) {
@@ -309,11 +311,11 @@ function removeVideoAds() {
                             var responseText = await response.text();
                             var weaverText = null;
 
-                            weaverText = await processM3U8(url, responseText, realFetch, PlayerType2, false);
+                            //weaverText = await processM3U8(url, responseText, realFetch, PlayerType2, false);
 
-                            if (weaverText.includes(AdSignifier)) {
+                            //if (weaverText.includes(AdSignifier)) {
                                 weaverText = await processM3U8(url, responseText, realFetch, PlayerType3, true);
-                            }
+                            //}
 
                             resolve(new Response(weaverText));
                         };
@@ -373,34 +375,48 @@ function removeVideoAds() {
         };
     }
 
-    async function getNewUsher(realFetch, originalResponse, channelName) {
-        AdFreeStream = null;
-        ShowingAdFree = false;
+async function getNewUsher(realFetch, originalResponse, channelName) {
+    AdFreeStream = null;
+    ShowingAdFree = false;
 
-        var accessTokenResponse = await getAccessToken(channelName, PlayerType1);
-        var encodingsM3u8 = '';
+    var accessTokenResponse = await getAccessToken(channelName, PlayerType1);
+    var encodingsM3u8 = '';
 
-        if (accessTokenResponse.status === 200) {
+    if (accessTokenResponse.status === 200) {
 
-            var accessToken = await accessTokenResponse.json();
+        var accessToken = await accessTokenResponse.json();
 
-            try {
-                var urlInfo = new URL('https://usher.ttvnw.net/api/channel/hls/' + channelName + '.m3u8' + UsherParams);
-                urlInfo.searchParams.set('sig', accessToken.data.streamPlaybackAccessToken.signature);
-                urlInfo.searchParams.set('token', accessToken.data.streamPlaybackAccessToken.value);
-                var encodingsM3u8Response = await realFetch(urlInfo.href);
-                if (encodingsM3u8Response.status === 200) {
-                    encodingsM3u8 = await encodingsM3u8Response.text();
-                    return encodingsM3u8;
-                } else {
-                    return originalResponse;
-                }
-            } catch (err) {}
-            return originalResponse;
-        } else {
-            return originalResponse;
+        if (HideBlockingMessage == false) {
+            postMessage({
+                key: 'ShowDonateBanner'
+            });
+        } else if (HideBlockingMessage == true) {
+            postMessage({
+                key: 'HideAdBlockBanner'
+            });
         }
+        setTimeout(function() {
+            postMessage({
+                key: 'HideAdBlockBanner'
+            });
+        }, 20000)
+
+        try {
+            var urlInfo = new URL('https://api.ttv.lol/playlist/' + channelName + '.m3u8%3Fallow_source%3Dtrue');
+            var encodingsM3u8Response = await realFetch(urlInfo.href);
+            if (encodingsM3u8Response.status === 200) {
+                encodingsM3u8 = await encodingsM3u8Response.text();
+                return encodingsM3u8;
+            } else {
+                return originalResponse;
+            }
+
+        } catch (err) {}
+        return originalResponse;
+    } else {
+        return originalResponse;
     }
+}
 
     async function processM3U8(url, textStr, realFetch, playerType, isBackup) {
         //Checks the m3u8 for ads and if it finds one, instead returns an ad-free stream.
@@ -423,6 +439,10 @@ function removeVideoAds() {
 
         if (haveAdTags) {
 
+                                                    postMessage({
+                                            key: 'ForceChangeQuality'
+                                        });
+
             if (ShowingAdFree) {
                 var showingAdFreeResponseFree = await realFetch(AdFreeStream);
                 if (showingAdFreeResponseFree.status == 200) {
@@ -431,52 +451,9 @@ function removeVideoAds() {
                 }
             }
 
-            var accessTokenResponse = await getAccessToken(CurrentChannelName, playerType);
-
-            if (accessTokenResponse.status === 200) {
-
-                var accessToken = await accessTokenResponse.json();
-
                 try {
-                    var urlInfo = new URL('https://usher.ttvnw.net/api/channel/hls/' + CurrentChannelName + '.m3u8' + UsherParams);
-                    urlInfo.searchParams.set('sig', accessToken.data.streamPlaybackAccessToken.signature);
-                    urlInfo.searchParams.set('token', accessToken.data.streamPlaybackAccessToken.value);
-                    var encodingsM3u8Response = await realFetch(urlInfo.href);
-                    if (encodingsM3u8Response.status === 200) {
-
-                        var encodingsM3u8 = await encodingsM3u8Response.text();
-
-                        if (playerType == PlayerType3) {
-                            streamM3u8Url = encodingsM3u8.match(/^https:.*\.m3u8$/mg)[0];
-                        } else if (playerType == PlayerType2) {
-                            streamM3u8UrlCount = encodingsM3u8.match(/^https:.*\.m3u8$/mg).length;
-                            streamM3u8Url = encodingsM3u8.match(/^https:.*\.m3u8$/mg)[streamM3u8UrlFreeCount - 3];
-                        } else {
-                            streamM3u8Url = encodingsM3u8.match(/^https:.*\.m3u8$/mg)[0];
-                        }
-
-                        var streamM3u8Response = await realFetch(streamM3u8Url);
-                        if (streamM3u8Response.status == 200) {
-                            var m3u8Text = await streamM3u8Response.text();
-                            WasShowingAd = true;
-                            if (HideBlockingMessage == false) {
-                                if (Math.floor(Math.random() * 3) == 2) {
-                                    postMessage({
-                                        key: 'ShowDonateBanner'
-                                    });
-                                } else {
-                                    postMessage({
-                                        key: 'ShowAdBlockBanner'
-                                    });
-                                }
-                            } else if (HideBlockingMessage == true) {
-                                postMessage({
-                                    key: 'HideAdBlockBanner'
-                                });
-                            }
-
-                            //Backup for when thunderdome/embed breaks.
-                            if (m3u8Text.includes(AdSignifier) && isBackup) {
+                            //Backup
+                            if (isBackup) {
 
                                 var urlInfoFree = new URL('https://api.ttv.lol/playlist/' + CurrentChannelName + '.m3u8%3Fallow_source%3Dtrue');
                                 var encodingsM3u8ResponseFree = await realFetch(urlInfoFree.href);
@@ -505,26 +482,27 @@ function removeVideoAds() {
                                     }
                                 }
 
-                            } else {
-
-                                postMessage({
-                                    key: 'ForceChangeQuality'
-                                });
-
                             }
+                            if (m3u8Text.length > 10) {
+
+                            WasShowingAd = true;
+
+        if (HideBlockingMessage == false) {
+            postMessage({
+                key: 'ShowDonateBanner'
+            });
+        } else if (HideBlockingMessage == true) {
+            postMessage({
+                key: 'HideAdBlockBanner'
+            });
+        }
 
                             return m3u8Text;
-                        } else {
+                            } else {
                             return textStr;
-                        }
-                    } else {
-                        return textStr;
-                    }
+                            }
                 } catch (err) {}
                 return textStr;
-            } else {
-                return textStr;
-            }
         } else {
             if (WasShowingAd) {
                 WasShowingAd = false;
