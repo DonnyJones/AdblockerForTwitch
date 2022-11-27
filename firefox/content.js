@@ -28,16 +28,16 @@ function updateSettings() {
 function removeVideoAds() {
     //This stops Twitch from pausing the player when in another tab and an ad shows.
     try {
-        Object.defineProperty(document, 'visibilityState', {
-            get() {
-                return 'visible';
-            }
-        });
-        Object.defineProperty(document, 'hidden', {
-            get() {
-                return false;
-            }
-        });
+        //Object.defineProperty(document, 'visibilityState', {
+        //    get() {
+        //        return 'visible';
+        //    }
+        //});
+        //Object.defineProperty(document, 'hidden', {
+        //    get() {
+        //        return false;
+        //    }
+        //});
         const block = e => {
             e.preventDefault();
             e.stopPropagation();
@@ -50,23 +50,23 @@ function removeVideoAds() {
             //This corrects the background tab buffer bug when switching to the background tab for the first time after an extended period.
             doTwitchPlayerTask(false, false, true, false, false);
         };
-        document.addEventListener('visibilitychange', process, true);
-        document.addEventListener('webkitvisibilitychange', block, true);
-        document.addEventListener('mozvisibilitychange', block, true);
-        document.addEventListener('hasFocus', block, true);
-        if (/Firefox/.test(navigator.userAgent)) {
-            Object.defineProperty(document, 'mozHidden', {
-                get() {
-                    return false;
-                }
-            });
-        } else {
-            Object.defineProperty(document, 'webkitHidden', {
-                get() {
-                    return false;
-                }
-            });
-        }
+        //document.addEventListener('visibilitychange', process, true);
+        //document.addEventListener('webkitvisibilitychange', block, true);
+        //document.addEventListener('mozvisibilitychange', block, true);
+        //document.addEventListener('hasFocus', block, true);
+        //if (/Firefox/.test(navigator.userAgent)) {
+        //    Object.defineProperty(document, 'mozHidden', {
+        //        get() {
+        //            return false;
+        //        }
+        //    });
+        //} else {
+        //    Object.defineProperty(document, 'webkitHidden', {
+        //        get() {
+        //            return false;
+        //        }
+        //    });
+        //}
     } catch (err) {}
 
     //Send settings updates to worker.
