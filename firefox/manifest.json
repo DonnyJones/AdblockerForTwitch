@@ -2,7 +2,7 @@
   "description": "Blocks Video Ads on Twitch.tv.",
   "manifest_version": 2,
   "name": "Better Twitch Adblock",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "icons": {
     "48": "icons/adblock-48x48.png",
     "96": "icons/adblock-96x96.png"
