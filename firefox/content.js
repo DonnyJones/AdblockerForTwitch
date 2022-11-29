@@ -337,38 +337,40 @@ function removeVideoAds() {
                     if (isPBYPRequest) {
                         url = '';
                     }
+                    AdFreeStream = null;
+                    ShowingAdFree = false;
 
-                    var useNewUsher = false;
-                    if (url.includes('subscriber%22%3Afalse') && url.includes('hide_ads%22%3Afalse') && url.includes('show_ads%22%3Atrue')) {
-                        useNewUsher = true;
-                    }
-                    if (url.includes('subscriber%22%3Atrue') && url.includes('hide_ads%22%3Afalse') && url.includes('show_ads%22%3Atrue')) {
-                        useNewUsher = true;
-                    }
+                    //var useNewUsher = false;
+                    //if (url.includes('subscriber%22%3Afalse') && url.includes('hide_ads%22%3Afalse') && url.includes('show_ads%22%3Atrue')) {
+                    //    useNewUsher = true;
+                    //}
+                    //if (url.includes('subscriber%22%3Atrue') && url.includes('hide_ads%22%3Afalse') && url.includes('show_ads%22%3Atrue')) {
+                    //    useNewUsher = true;
+                    //}
 
-                    if (useNewUsher == true) {
-                        return new Promise(function(resolve, reject) {
-                            var processAfter = async function(response) {
-                                encodingsM3u8 = await getNewUsher(realFetch, response, channelName);
-                                if (encodingsM3u8.length > 1) {
-                                    resolve(new Response(encodingsM3u8));
-                                } else {
-                                    postMessage({
-                                        key: 'HideAdBlockBanner'
-                                    });
-                                    resolve(encodingsM3u8);
-                                }
-                            };
-                            var send = function() {
-                                return realFetch(url, options).then(function(response) {
-                                    processAfter(response);
-                                })['catch'](function(err) {
-                                    reject(err);
-                                });
-                            };
-                            send();
-                        });
-                    }
+                    //if (useNewUsher == true) {
+                    //    return new Promise(function(resolve, reject) {
+                    //        var processAfter = async function(response) {
+                    //            encodingsM3u8 = await getNewUsher(realFetch, response, channelName);
+                    //            if (encodingsM3u8.length > 1) {
+                    //                resolve(new Response(encodingsM3u8));
+                    //            } else {
+                    //                postMessage({
+                    //                    key: 'HideAdBlockBanner'
+                    //                });
+                    //               resolve(encodingsM3u8);
+                    //            }
+                    //        };
+                    //        var send = function() {
+                    //            return realFetch(url, options).then(function(response) {
+                    //                processAfter(response);
+                    //            })['catch'](function(err) {
+                    //                reject(err);
+                    //            });
+                    //        };
+                    //        send();
+                    //    });
+                    //}
                 }
             }
             return realFetch.apply(this, arguments);
