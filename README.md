@@ -22,7 +22,7 @@ Edge : https://microsoftedge.microsoft.com/addons/detail/dahmifdfembhgdohgbhnjhn
 
 Latest Changes:
 
-- Fixed channel points.
+- Cleaned up files.
 
 
 The code is licensed under the GPL-3.0 license and is based on https://github.com/cleanlock/VideoAdBlockForTwitch by cleanlock.
